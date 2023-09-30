@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Object Detection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            flex-grow: 1;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .object-count {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .class-name {
+            text-align: center;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+        .video-container {
+            text-align: center;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Object Detection</h1>
+        <p class="object-count">Number of Objects Detected: <span id="objectCount">0</span></p>
+        <div class="class-name">
+            <p>Class Name: <span id="className">None</span></p>
+        </div>
+        <div class="video-container">
+            <img src="{{ url_for('image_feed') }}" alt="Video Feed">
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script>
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+        socket.on('connect', function() {
+            console.log('Connected to server');
+        });
+
+        socket.on('update', function(data) {
+            document.getElementById('objectCount').textContent = data.object_count;
+            document.getElementById('className').textContent = data.class_name;
+        });
+    </script>
+</body>
+</html>
